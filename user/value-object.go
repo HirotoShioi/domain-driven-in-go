@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/asaskevich/govalidator"
+	"github.com/google/uuid"
 )
 
 // 冗長的だが、それでいい
@@ -29,8 +30,9 @@ func (u *UserId) Value() string {
 	return u.id
 }
 
-func NewUserId(s string) UserId {
-	return UserId{s}
+func NewUserId() UserId {
+	uuid := uuid.New()
+	return UserId{uuid.URN()}
 }
 
 type UserName struct {

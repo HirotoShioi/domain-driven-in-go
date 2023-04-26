@@ -9,3 +9,9 @@ type User struct {
 func NewUser(id UserId, username UserName, email Email) User {
 	return User{id: id, username: username, email: email}
 }
+
+type UserData struct {
+	Id       string
+	Username string
+	Email    string
+}

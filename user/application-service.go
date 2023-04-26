@@ -12,7 +12,7 @@ type ApplicationService struct {
 	userService    UserService
 }
 
-func (a *ApplicationService) Register(createUserDto CreateUserDto) (*User, error) {
+func (a *ApplicationService) Register(createUserDto CreateUserDto) (*UserData, error) {
 	result, err := a.userRepository.Create(createUserDto)
 	if err != nil {
 		return nil, err
@@ -20,12 +20,12 @@ func (a *ApplicationService) Register(createUserDto CreateUserDto) (*User, error
 	return result, nil
 }
 
-func (a *ApplicationService) Get(id string) (*User, error) {
+func (a *ApplicationService) Get(id string) (*UserData, error) {
 	userId := UserId{id}
 	return a.userRepository.Find(userId)
 }
 
-func (a *ApplicationService) Update(updateUserDto UpdateUserDto) (*User, error) {
+func (a *ApplicationService) Update(updateUserDto UpdateUserDto) (*UserData, error) {
 	userExists, err := a.userService.Exists(updateUserDto.UserId)
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (a *ApplicationService) Update(updateUserDto UpdateUserDto) (*User, error) 
 		return nil, UserNotFound
 	}
 
-	return a.userRepository.UpdateUser(updateUserDto)
+	return a.userRepository.Update(updateUserDto)
 }
 
 func (a *ApplicationService) Delete(userId UserId) error {

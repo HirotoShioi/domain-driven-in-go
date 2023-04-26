@@ -12,24 +12,8 @@ type ApplicationService struct {
 	userService    UserService
 }
 
-func (a *ApplicationService) Register(username, address string) (*User, error) {
-	name, err := NewUserName(username)
-	if err != nil {
-		return nil, err
-	}
-	email, err := NewEmail(address)
-	if err != nil {
-		return nil, err
-	}
-	userId := NewUserId()
-	user := NewUser(userId, name, email)
-
-	userExists, err := a.userService.Exists(userId)
-	if userExists {
-		return nil, UserAlreadyExists
-	}
-
-	result, err := a.userRepository.Create(user)
+func (a *ApplicationService) Register(createUserDto CreateUserDto) (*User, error) {
+	result, err := a.userRepository.Create(createUserDto)
 	if err != nil {
 		return nil, err
 	}
@@ -41,14 +25,8 @@ func (a *ApplicationService) Get(id string) (*User, error) {
 	return a.userRepository.Find(userId)
 }
 
-func (a *ApplicationService) Update(id, newName string) (*User, error) {
-	userId := UserId{id}
-	username, err := NewUserName(newName)
-	if err != nil {
-		return nil, err
-	}
-
-	userExists, err := a.userService.Exists(userId)
+func (a *ApplicationService) Update(updateUserDto UpdateUserDto) (*User, error) {
+	userExists, err := a.userService.Exists(updateUserDto.UserId)
 	if err != nil {
 		return nil, err
 	}
@@ -57,11 +35,10 @@ func (a *ApplicationService) Update(id, newName string) (*User, error) {
 		return nil, UserNotFound
 	}
 
-	return a.userRepository.UpdateUser(userId, username)
+	return a.userRepository.UpdateUser(updateUserDto)
 }
 
-func (a *ApplicationService) Delete(id string) error {
-	userId := UserId{id}
+func (a *ApplicationService) Delete(userId UserId) error {
 	userExists, err := a.userService.Exists(userId)
 	if err != nil {
 		return err

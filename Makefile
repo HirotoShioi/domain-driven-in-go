@@ -28,3 +28,5 @@ sqlc:
 
 test:
 	go test -v -cover ./...
+
+# TODO: マイグレーションファイルを作成するコマンドを追加する

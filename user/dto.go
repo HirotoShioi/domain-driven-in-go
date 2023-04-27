@@ -1,5 +1,7 @@
 package user
 
+// TODO: DTO(Domain transfer object)の定義を書く
+
 type CreateUserDto struct {
 	Username UserName
 	Email    Email

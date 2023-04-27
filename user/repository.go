@@ -1,10 +1,18 @@
 package user
 
+// TODO: リポジトリの定義を書く
+
 import (
 	"context"
 
 	db "github.com/HirotoShioi/domain-design/db/sqlc"
 )
+
+type UserData struct {
+	Userid   string `json:"userid"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
+}
 
 type UserRepository interface {
 	Create(createUserDto CreateUserDto) (*UserData, error)
@@ -25,7 +33,7 @@ func NewDatabaseRepository(dbc db.DBTX) *UserDbRepository {
 
 func (r *UserDbRepository) Create(createUserDto CreateUserDto) (*UserData, error) {
 	arg := db.CreateUserParams{
-		Userid:   NewUserId().id,
+		Userid:   NewUserId().value,
 		Username: createUserDto.Username.Value(),
 		Email:    createUserDto.Email.Value(),
 	}
@@ -38,11 +46,11 @@ func (r *UserDbRepository) Create(createUserDto CreateUserDto) (*UserData, error
 }
 
 func (r *UserDbRepository) Delete(userId UserId) error {
-	return r.queries.DeleteUser(r.context, userId.id)
+	return r.queries.DeleteUser(r.context, userId.value)
 }
 
 func (r *UserDbRepository) Find(userId UserId) (*UserData, error) {
-	user, err := r.queries.GetUser(r.context, userId.id)
+	user, err := r.queries.GetUser(r.context, userId.value)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +59,8 @@ func (r *UserDbRepository) Find(userId UserId) (*UserData, error) {
 
 func (r *UserDbRepository) Update(dto UpdateUserDto) (*UserData, error) {
 	arg := db.UpdateUserParams{
-		Userid:   dto.UserId.id,
-		Username: dto.UserId.id,
+		Userid:   dto.UserId.value,
+		Username: dto.UserId.value,
 	}
 
 	user, err := r.queries.UpdateUser(r.context, arg)
@@ -66,7 +74,7 @@ func (r *UserDbRepository) Update(dto UpdateUserDto) (*UserData, error) {
 func toUserData(u db.User) *UserData {
 	return &UserData{
 		Username: u.Username,
-		Id:       u.Userid,
+		Userid:   u.Userid,
 		Email:    u.Email,
 	}
 }

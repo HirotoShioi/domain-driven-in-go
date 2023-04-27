@@ -1,5 +1,6 @@
 package user
 
+// TODO: アプリケーションサービスの定義を書く
 import "fmt"
 
 var (

@@ -17,71 +17,29 @@ var (
 
 // TODO: mysqlで自動生成する
 // 大文字だと値変更が可能になってしまう
-type UserId struct {
-	value string
-}
+type UserId string
 
-func (u *UserId) Equal(userId UserId) bool {
-	return u.value == userId.value
-}
+type UserName string
 
-func (u *UserId) String() string {
-	return u.value
-}
-
-func (u *UserId) Value() string {
-	return u.value
-}
-
-func NewUserId() UserId {
-	uuid := uuid.New()
-	return UserId{uuid.URN()}
-}
-
-type UserName struct {
-	value string
-}
-
-func (u *UserName) Equal(username UserName) bool {
-	return u.value == username.value
-}
-
-func (u *UserName) Value() string {
-	return u.value
-}
-
-func (u *UserName) String() string {
-	return u.value
-}
+type Email string
 
 // バリデーションを強化する
 func NewUserName(s string) (UserName, error) {
 	if len(s) < 3 {
-		return UserName{}, InvalidUserName
+		return UserName(""), InvalidUserName
 	}
 
-	return UserName{value: s}, nil
+	return UserName(s), nil
 }
 
-type Email struct {
-	value string
-}
-
-func (e *Email) Equal(email Email) bool {
-	return e.value == email.value
-}
-
-func (e *Email) Value() string {
-	return e.value
-}
-
-func (e *Email) String() string {
-	return e.value
+func NewUserId() UserId {
+	uuid := uuid.New()
+	return UserId(uuid.URN())
 }
 
 func NewEmail(s string) (Email, error) {
 	if !govalidator.IsEmail(s) {
-		return Email{}, InvalidEmailAddress
+		return Email(""), InvalidEmailAddress
 	}
-	return Email{value: s}, nil
+	return Email(s), nil
 }

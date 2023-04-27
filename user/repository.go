@@ -34,9 +34,9 @@ func NewDatabaseRepository(dbc db.DBTX) *UserDbRepository {
 
 func (r *UserDbRepository) Create(createUserDto CreateUserDto) (*UserData, error) {
 	arg := db.CreateUserParams{
-		Userid:   NewUserId().value,
-		Username: createUserDto.Username.Value(),
-		Email:    createUserDto.Email.Value(),
+		Userid:   string(NewUserId()),
+		Username: string(createUserDto.Username),
+		Email:    string(createUserDto.Email),
 	}
 
 	dbUser, err := r.queries.CreateUser(context.Background(), arg)
@@ -47,11 +47,11 @@ func (r *UserDbRepository) Create(createUserDto CreateUserDto) (*UserData, error
 }
 
 func (r *UserDbRepository) Delete(userId UserId) error {
-	return r.queries.DeleteUser(r.context, userId.value)
+	return r.queries.DeleteUser(r.context, string(userId))
 }
 
 func (r *UserDbRepository) Find(userId UserId) (*UserData, error) {
-	user, err := r.queries.GetUser(r.context, userId.value)
+	user, err := r.queries.GetUser(r.context, string(userId))
 	if err == sql.ErrNoRows {
 		return nil, UserNotFound
 	} else if err != nil {
@@ -62,8 +62,8 @@ func (r *UserDbRepository) Find(userId UserId) (*UserData, error) {
 
 func (r *UserDbRepository) Update(dto UpdateUserDto) (*UserData, error) {
 	arg := db.UpdateUserParams{
-		Userid:   dto.UserId.value,
-		Username: dto.UserId.value,
+		Userid:   string(dto.UserId),
+		Username: string(dto.UserId),
 	}
 
 	user, err := r.queries.UpdateUser(r.context, arg)

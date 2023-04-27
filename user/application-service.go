@@ -16,7 +16,7 @@ func (a *ApplicationService) Register(createUserDto CreateUserDto) (*UserData, e
 }
 
 func (a *ApplicationService) Get(id string) (*UserData, error) {
-	userId := UserId{id}
+	userId := UserId(id)
 	return a.userRepository.Find(userId)
 }
 

@@ -30,6 +30,6 @@ func NewUpdateUserDto(userId string, username string) (UpdateUserDto, error) {
 	if err != nil {
 		return UpdateUserDto{}, err
 	}
-	id := UserId{userId}
+	id := UserId(userId)
 	return UpdateUserDto{id, u}, nil
 }

@@ -4,6 +4,7 @@ package user
 
 import (
 	"context"
+	"database/sql"
 
 	db "github.com/HirotoShioi/domain-design/db/sqlc"
 )
@@ -51,7 +52,9 @@ func (r *UserDbRepository) Delete(userId UserId) error {
 
 func (r *UserDbRepository) Find(userId UserId) (*UserData, error) {
 	user, err := r.queries.GetUser(r.context, userId.value)
-	if err != nil {
+	if err == sql.ErrNoRows {
+		return nil, UserNotFound
+	} else if err != nil {
 		return nil, err
 	}
 	return toUserData(user), nil

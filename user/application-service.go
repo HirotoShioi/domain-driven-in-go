@@ -1,12 +1,6 @@
 package user
 
 // TODO: アプリケーションサービスの定義を書く
-import "fmt"
-
-var (
-	UserNotFound      = fmt.Errorf("User not found")
-	UserAlreadyExists = fmt.Errorf("User already exists")
-)
 
 type ApplicationService struct {
 	userRepository UserRepository

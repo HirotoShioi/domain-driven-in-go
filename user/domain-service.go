@@ -1,6 +1,5 @@
+// ドメインサービス
 package user
-
-// TODO: ドメインサービスの定義を書く
 
 type UserService struct {
 	userRepository UserRepository

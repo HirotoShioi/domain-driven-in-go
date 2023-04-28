@@ -15,7 +15,7 @@ func (a *ApplicationService) Register(createUserDto CreateUserDto) (*UserData, e
 	return result, nil
 }
 
-func (a *ApplicationService) Get(id string) (*UserData, error) {
+func (a *ApplicationService) Get(id int32) (*UserData, error) {
 	userId := UserId(id)
 	return a.userRepository.Find(userId)
 }

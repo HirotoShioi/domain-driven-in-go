@@ -11,22 +11,20 @@ import (
 
 const createUser = `-- name: CreateUser :one
 INSERT INTO users (
-    userid,
     username,
     email
 ) VALUES (
-    $1, $2, $3
+    $1, $2
 ) RETURNING userid, username, email, created_at
 `
 
 type CreateUserParams struct {
-	Userid   string `json:"userid"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 }
 
 func (q *Queries) CreateUser(ctx context.Context, arg CreateUserParams) (User, error) {
-	row := q.db.QueryRowContext(ctx, createUser, arg.Userid, arg.Username, arg.Email)
+	row := q.db.QueryRowContext(ctx, createUser, arg.Username, arg.Email)
 	var i User
 	err := row.Scan(
 		&i.Userid,
@@ -42,7 +40,7 @@ DELETE FROM users
 WHERE userid = $1
 `
 
-func (q *Queries) DeleteUser(ctx context.Context, userid string) error {
+func (q *Queries) DeleteUser(ctx context.Context, userid int32) error {
 	_, err := q.db.ExecContext(ctx, deleteUser, userid)
 	return err
 }
@@ -53,7 +51,7 @@ WHERE userid = $1
 LIMIT 1
 `
 
-func (q *Queries) GetUser(ctx context.Context, userid string) (User, error) {
+func (q *Queries) GetUser(ctx context.Context, userid int32) (User, error) {
 	row := q.db.QueryRowContext(ctx, getUser, userid)
 	var i User
 	err := row.Scan(
@@ -73,7 +71,7 @@ RETURNING userid, username, email, created_at
 `
 
 type UpdateUserParams struct {
-	Userid   string `json:"userid"`
+	Userid   int32  `json:"userid"`
 	Username string `json:"username"`
 }
 

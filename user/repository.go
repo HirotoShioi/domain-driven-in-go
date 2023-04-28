@@ -1,6 +1,6 @@
+// リポジトリ
+// データの永続化や再構築（復元）を担う
 package user
-
-// TODO: リポジトリの定義を書く
 
 import (
 	"context"
@@ -10,11 +10,14 @@ import (
 )
 
 type UserData struct {
-	Userid   string `json:"userid"`
+	Userid   int32  `json:"userid"`
 	Username string `json:"username"`
 	Email    string `json:"email"`
 }
 
+// UserRepositoryはリポジトリのインターフェース
+// リポジトリに依存するコンポーネントはインターフェースに依存させることによってテストが容易になる。
+// - 本番環境ではデータベースを利用し、テスト環境ではIn Memory(map等)を使う
 type UserRepository interface {
 	Create(createUserDto CreateUserDto) (*UserData, error)
 	Delete(userId UserId) error
@@ -22,19 +25,19 @@ type UserRepository interface {
 	Update(updateUserDto UpdateUserDto) (*UserData, error)
 }
 
-type UserDbRepository struct {
+// UserDBRepositoryはデータベースを利用するリポジトリ
+type UserDBRepository struct {
 	queries *db.Queries
 	context context.Context
 }
 
-func NewDatabaseRepository(dbc db.DBTX) *UserDbRepository {
+func NewDatabaseRepository(dbc db.DBTX) *UserDBRepository {
 	queries := db.New(dbc)
-	return &UserDbRepository{queries: queries, context: context.Background()}
+	return &UserDBRepository{queries: queries, context: context.Background()}
 }
 
-func (r *UserDbRepository) Create(createUserDto CreateUserDto) (*UserData, error) {
+func (r *UserDBRepository) Create(createUserDto CreateUserDto) (*UserData, error) {
 	arg := db.CreateUserParams{
-		Userid:   string(NewUserId()),
 		Username: string(createUserDto.Username),
 		Email:    string(createUserDto.Email),
 	}
@@ -46,12 +49,12 @@ func (r *UserDbRepository) Create(createUserDto CreateUserDto) (*UserData, error
 	return toUserData(dbUser), nil
 }
 
-func (r *UserDbRepository) Delete(userId UserId) error {
-	return r.queries.DeleteUser(r.context, string(userId))
+func (r *UserDBRepository) Delete(userId UserId) error {
+	return r.queries.DeleteUser(r.context, int32(userId))
 }
 
-func (r *UserDbRepository) Find(userId UserId) (*UserData, error) {
-	user, err := r.queries.GetUser(r.context, string(userId))
+func (r *UserDBRepository) Find(userId UserId) (*UserData, error) {
+	user, err := r.queries.GetUser(r.context, int32(userId))
 	if err == sql.ErrNoRows {
 		return nil, UserNotFound
 	} else if err != nil {
@@ -60,9 +63,9 @@ func (r *UserDbRepository) Find(userId UserId) (*UserData, error) {
 	return toUserData(user), nil
 }
 
-func (r *UserDbRepository) Update(dto UpdateUserDto) (*UserData, error) {
+func (r *UserDBRepository) Update(dto UpdateUserDto) (*UserData, error) {
 	arg := db.UpdateUserParams{
-		Userid:   string(dto.UserId),
+		Userid:   int32(dto.UserId),
 		Username: string(dto.UserId),
 	}
 

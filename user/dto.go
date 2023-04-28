@@ -25,7 +25,7 @@ type UpdateUserDto struct {
 	UserName UserName
 }
 
-func NewUpdateUserDto(userId string, username string) (UpdateUserDto, error) {
+func NewUpdateUserDto(userId int32, username string) (UpdateUserDto, error) {
 	u, err := NewUserName(username)
 	if err != nil {
 		return UpdateUserDto{}, err

@@ -22,8 +22,8 @@ import (
 )
 
 var (
-	InvalidUserName     = fmt.Errorf("Username must be more than 3 characters long")
-	InvalidEmailAddress = fmt.Errorf("Invalid email address")
+	ErrorInvalidUserName     = fmt.Errorf("username must be more than 3 characters long")
+	ErrorInvalidEmailAddress = fmt.Errorf("invalid email address")
 )
 
 type UserId int32
@@ -35,7 +35,7 @@ type Email string
 // TODO: バリデーションを強化する
 func NewUserName(s string) (UserName, error) {
 	if len(s) < 3 {
-		return UserName(""), InvalidUserName
+		return UserName(""), ErrorInvalidUserName
 	}
 
 	return UserName(s), nil
@@ -43,7 +43,7 @@ func NewUserName(s string) (UserName, error) {
 
 func NewEmail(s string) (Email, error) {
 	if !govalidator.IsEmail(s) {
-		return Email(""), InvalidEmailAddress
+		return Email(""), ErrorInvalidEmailAddress
 	}
 	return Email(s), nil
 }

@@ -13,7 +13,6 @@ import (
 var testQueries *Queries
 var testDb *sql.DB
 
-// TODO: テスト実行を実装する
 func TestMain(m *testing.M) {
 	config, err := util.LoadConfig("../..")
 	if err != nil {

@@ -3,6 +3,6 @@ package user
 import "fmt"
 
 var (
-	UserNotFound      = fmt.Errorf("User not found")
-	UserAlreadyExists = fmt.Errorf("User already exists")
+	ErrorUserNotFound      = fmt.Errorf("user not found")
+	ErrorUserAlreadyExists = fmt.Errorf("user already exists")
 )

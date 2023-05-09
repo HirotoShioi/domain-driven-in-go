@@ -56,7 +56,7 @@ func (r *UserDBRepository) Delete(userId UserId) error {
 func (r *UserDBRepository) Find(userId UserId) (*UserData, error) {
 	user, err := r.queries.GetUser(r.context, int32(userId))
 	if err == sql.ErrNoRows {
-		return nil, UserNotFound
+		return nil, ErrorUserNotFound
 	} else if err != nil {
 		return nil, err
 	}

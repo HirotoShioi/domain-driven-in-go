@@ -1,9 +1,16 @@
 package user
 
 // TODO: アプリケーションサービスの定義を書く
+// アプリケーションサービス
+// - ユースケースの実現
+// - ユースケース
+// ユーザーの登録
+// ユーザー情報の取得
+// ユーザー情報の更新
+// ユーザーの削除
 
 type ApplicationService struct {
-	userRepository UserRepository
+	userRepository UserRepository // リポジトリのインターフェースに依存させる
 	userService    UserService
 }
 
@@ -27,7 +34,7 @@ func (a *ApplicationService) Update(updateUserDto UpdateUserDto) (*UserData, err
 	}
 
 	if !userExists {
-		return nil, UserNotFound
+		return nil, ErrorUserNotFound
 	}
 
 	return a.userRepository.Update(updateUserDto)
